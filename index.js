@@ -6,7 +6,7 @@
 // Merged Buffer refactorings from base58-native by Stephen Pair
 // Copyright (c) 2013 BitPay Inc
 
-module.exports = function base (ALPHABET) {
+module.exports = function base (ALPHABET, options) {
   var ALPHABET_MAP = {}
   var BASE = ALPHABET.length
   var LEADER = ALPHABET.charAt(0)
@@ -16,36 +16,41 @@ module.exports = function base (ALPHABET) {
     ALPHABET_MAP[ALPHABET.charAt(i)] = i
   }
 
+  // use preallocate if it defined in options
+  var tmpArray = null
+  if (typeof options === 'object' && typeof options.tmpArraySize === 'number') {
+    tmpArray = new Array(options.tmpArraySize)
+  }
+
+  tmpArray = new Array(1000) // delete
+
   function encode (source) {
     if (source.length === 0) return ''
 
-    var digits = [0]
+    var length = 1
+    tmpArray[0] = 0
     for (var i = 0; i < source.length; ++i) {
-      for (var j = 0, carry = source[i]; j < digits.length; ++j) {
-        carry += digits[j] << 8
-        digits[j] = carry % BASE
+      for (var j = 0, carry = source[i]; j < length; ++j) {
+        carry += tmpArray[j] << 8
+        tmpArray[j] = carry % BASE
         carry = (carry / BASE) | 0
       }
 
       while (carry > 0) {
-        digits.push(carry % BASE)
+        tmpArray[length++] = carry % BASE
         carry = (carry / BASE) | 0
       }
     }
 
     // deal with leading zeros
     for (var k = 0; source[k] === 0 && k < source.length - 1; ++k) {
-      digits.push(0)
+      tmpArray[length++] = 0
     }
 
     // convert digits to a string
-    for (var ii = 0, jj = digits.length - 1; ii <= jj; ++ii, --jj) {
-      var tmp = ALPHABET[digits[ii]]
-      digits[ii] = ALPHABET[digits[jj]]
-      digits[jj] = tmp
-    }
-
-    return digits.join('')
+    var string = ''
+    for (var ii = length - 1; ii >= 0; --ii) string += ALPHABET[tmpArray[ii]]
+    return string
   }
 
   function decode (string) {
