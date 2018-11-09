@@ -10,7 +10,7 @@ module.exports = function base (ALPHABET) {
   if (ALPHABET.length >= 255) throw new TypeError('Alphabet too long')
 
   const BASE_MAP = new Uint8Array(256)
-  BASE_MAP.fill(255)
+  for(var i = 0;i<256;i++)BASE_MAP[i]=255;
 
   for (let i = 0; i < ALPHABET.length; i++) {
     const x = ALPHABET.charAt(i)
