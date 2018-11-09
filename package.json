@@ -14,9 +14,9 @@
     "encode",
     "encoding"
   ],
-  "homepage": "https://github.com/cryptocoinjs/base-x",
+  "homepage": "https://github.com/takunee/base-x",
   "bugs": {
-    "url": "https://github.com/cryptocoinjs/base-x/issues"
+    "url": "https://github.com/takunee/base-x/issues"
   },
   "license": "MIT",
   "author": "Daniel Cousens",
@@ -26,7 +26,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cryptocoinjs/base-x.git"
+    "url": "https://github.com/takunee/base-x.git"
   },
   "scripts": {
     "standard": "standard",
